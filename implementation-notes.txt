@@ -1,0 +1,5 @@
+Four policies 
+1. Transfer 
+2. Selection
+3. Location -- trivial 
+4. State information 
