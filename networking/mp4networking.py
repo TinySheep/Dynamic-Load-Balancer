@@ -3,6 +3,7 @@ import socket
 import struct
 import sys
 import threading
+import zlib
 import Queue
 
 # The port to use, should be the same on both ends
@@ -132,7 +133,7 @@ class MP4networking:
 					buf = buf[obj_size_to_read:]
 					buf_size -= obj_size_to_read
 					obj_size_to_read = 0
-					obj_read = pickle.loads(data)
+					obj_read = pickle.loads(zlib.decompress(data))
 					store.put(obj_read)
 			if obj_size_to_read == 0:
 				if buf_size >= INT_SIZE:
@@ -143,8 +144,10 @@ class MP4networking:
 
 	def _send(self, conn, data):
 		data_str = pickle.dumps(data)
-		msg = struct.pack("I", len(data_str))
-		msg += data_str
+		compressed_data_str = zlib.compress(data_str)
+		msg = struct.pack("I", len(compressed_data_str))
+		#print("before: {0}, after: {1}".format(len(data_str), len(compressed_data_str)))
+		msg += compressed_data_str
 		size = len(msg)
 		while size > 0:
 			sent = conn.send(msg)
