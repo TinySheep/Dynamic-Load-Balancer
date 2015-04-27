@@ -7,7 +7,7 @@ jobs = []
 last_time =	-1
 last_num_jobs = -1
 
-def hardware_info(insNetworking, dispatcher):
+def hardware_info():
 	global last_time
 	global last_num_jobs
 	ret = {}
@@ -51,7 +51,7 @@ time.sleep(1)
 test = hardware_info()
 print(test)
 
-def adaptor(remote_info):
+def adaptor(remote_info, insNetworking, dispatcher):
 	local_info = hardware_info()
 	new_throttling = local_info["throttling"]
 	remote_throttling = remote_info["throttling"]
