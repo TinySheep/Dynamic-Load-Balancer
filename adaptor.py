@@ -43,8 +43,12 @@ def adaptor(remote_info, insNetworking, dispatcher, hardware_info):
 	ret["throttling"] = remote_throttling
 
 	local_speed = local_info["num"] / local_info["time"] * (new_throttling / local_info["throttling"])
+	if local_speed == 0:
+		return
 	local_rem = local_info["num"] / local_speed 
 	remote_speed = remote_info["num"] / remote_info["time"] * (remote_throttling / remote_info["throttling"])
+	if remote_speed == 0:
+		return
 	remote_rem = remote_info["num"] / remote_speed 
 
 	num_jobs_in = 0
@@ -63,7 +67,7 @@ def adaptor(remote_info, insNetworking, dispatcher, hardware_info):
 	if num_jobs_in > 0: 
 		ret["reqJobs"] = num_jobs_in
 	else: 
-		ret["reqJobs"] = 0
+		ret["reqJobs"] = 1
 		# Call transfer manager
 
 	insNetworking.send_comm(ret)

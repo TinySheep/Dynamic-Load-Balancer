@@ -20,7 +20,7 @@ class Router:
 			try:
 				comm = self._network_manager.recved_comm.get(timeout=3)
 			except:
-				print("911")
+				pass
 			else:
 				if comm["type"] == "bibi":
 					self.bibi.put(comm)
