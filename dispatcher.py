@@ -6,11 +6,12 @@ import threading
 #Throttling value is an integer
 class Dispatcher:
 
-	# lock = threading.Lock()
+	lock = threading.Lock()
 	thread_event = threading.Event()
 	t_v = 50
 	jobs = [0]*1024*1024*16
 	threads = []
+	done_count = 0
 
 	#pyplot animation code inspired by http://stackoverflow.com/questions/16249466/dynamically-updating-a-bar-plot-in-matplotlib
 	# def setup_backend(backend='TkAgg'):
@@ -78,7 +79,9 @@ class Dispatcher:
 						else:
 							time.sleep(sleep_time)
 							start_time = time.time()
-					print (clas.jobs[start_index:start_index+length])
+					# print (clas.jobs[start_index:start_index+length])
+					with clas.lock:
+						done_count += 1
 				# clas.lock.release()
 
 
