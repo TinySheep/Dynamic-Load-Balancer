@@ -32,8 +32,7 @@ network_manager = networking.mp4networking.MP4networking(addr)
 
 to_server = populate_jobs(network_manager.recved_jobs, 1024)
 
-with open('throttling.config', 'r') as config:
-	init_throttle = int(config.read())
+init_throttle = 100
 
 dispatcher.Dispatcher.dispatch_task(network_manager.recved_jobs, init_throttle, 4)
 
@@ -48,7 +47,7 @@ network_manager.send_jobs(to_server)
 
 state_manager_obj = state_manager.mp4statemanager.StateManager(network_manager, network_manager.recved_jobs, 15, hardware_manager)
 
-router = router.mp4router.Router(network_manager)
+router = router.mp4router.Router(network_manager, dispatcher.Dispatcher, hardware_manager)
 
 state_manager_obj.start_comm()
 

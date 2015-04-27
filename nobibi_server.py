@@ -1,4 +1,5 @@
 import os
+import time
 
 import adaptor
 import networking.mp4networking
@@ -9,8 +10,7 @@ import dispatcher
 
 network_manager = networking.mp4networking.MP4networking()
 
-with open('throttling.config', 'r') as config:
-	init_throttle = int(config.read())
+init_throttle = 100
 
 dispatcher.Dispatcher.dispatch_task(network_manager.recved_jobs, init_throttle, 4)
 
@@ -21,15 +21,9 @@ hardware_manager.hardware_info()
 while not network_manager.running:
 	pass
 
-router = router.mp4router.Router(network_manager)
+router = router.mp4router.Router(network_manager, dispatcher.Dispatcher, hardware_manager)
 
 while True:
-	try:
-		comm = router.bibi.get(3)
-	except:
-		print("timed out getting bibi")
-	else:
-		adaptor.adaptor(comm, network_manager, dispatcher.Dispatcher, hardware_manager)
-
+	time.sleep(5)
 	if network_manager.recved_jobs.qsize() == 0:
 		print("Completed {0} jobs".format(dispatcher.Dispatcher.done_count))

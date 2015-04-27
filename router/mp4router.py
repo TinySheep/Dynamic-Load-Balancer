@@ -27,7 +27,8 @@ class Router:
 				if comm["type"] == "bibi":
 					adaptor.adaptor(comm, self._network_manager, self._dispatcher, self._hardware_info)
 				elif comm["type"] == "thor":
-					dispatcher.setThrottling(comm["throttling"])
+					self._dispatcher.setThrottling(comm["throttling"])
+					self._hardware_info.throttle = comm["throttling"]
 					self.thor.put(comm)
 				else:
 					print("911911")

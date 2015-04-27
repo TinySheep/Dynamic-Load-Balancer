@@ -8,6 +8,7 @@ class HardwareInfo:
 		self.last_num_jobs = -1
 		self.pid = pid
 		self.job_queue_ref = job_queue_ref
+		self.throttle = 100
 
 
 	def hardware_info(self):
@@ -18,7 +19,6 @@ class HardwareInfo:
 		else:
 			time_elapsed = time.time() - self.last_time
 			self.last_time = time.time()
-			print("time is " + str(time_elapsed))
 			ret["time"] = time_elapsed
 		
 
@@ -36,9 +36,13 @@ class HardwareInfo:
 		ret["my_cpu"] = proc.get_cpu_percent(0.1)
 		ret["free_cpu"] = 100 - psutil.cpu_percent(interval=0.1)
 		ret["num"] = qlen
-		with open('throttling.config', 'r') as config:
-			throttling_val = int(config.read())
-		ret["throttling"] = throttling_val
+		with open('throttling.config', 'r+') as config:
+			t_v = config.read()
+			if t_v:
+				self.throttle = int(t_v)
+				config.truncate(0)
+
+		ret["throttling"] = self.throttle
 		ret["type"] = "bibi"
 
 		print(ret)
