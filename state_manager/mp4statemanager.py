@@ -22,6 +22,7 @@ class StateManager:
 		t = threading.Thread(target=self._comm_func)
 		t.dameon = True
 		t.start()
+		self._started = True
 
 	def shutdown(self):
 		if not self._started:

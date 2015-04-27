@@ -11,6 +11,7 @@ class Dispatcher:
 	t_v = 50
 	jobs = [0]*1024*1024*16
 	threads = []
+	results = []
 	done_count = 0
 
 	#pyplot animation code inspired by http://stackoverflow.com/questions/16249466/dynamically-updating-a-bar-plot-in-matplotlib
@@ -42,7 +43,7 @@ class Dispatcher:
 		# clas.lock.release()
 
 	@classmethod
-	def threaded_function(clas, job_queue):
+	def threaded_function(clas, job_queue, result):
 		print ("thread generated\n")
 		# global thread_event
 		start_time = time.time()
@@ -55,8 +56,11 @@ class Dispatcher:
 				start_time = time.time()
 			else:
 				#print ("grabbed lock")
-				job = job_queue.get()
-				if job:
+				try:
+					job = job_queue.get(timeout=2)
+				except:
+					pass
+				else:
 					exec_time = clas.t_v * 0.001
 					sleep_time = 0.1 - exec_time 
 					(start_index, length) = job["index"]
@@ -80,6 +84,10 @@ class Dispatcher:
 					# 		time.sleep(sleep_time)
 					# 		start_time = time.time()
 					# print (clas.jobs[start_index:start_index+length])
+					done_job = {}
+					done_job['index'] = (start_index, length)
+					done_job['data'] = curr_jobs
+					result.append(done_job)
 					with clas.lock:
 						clas.done_count += 1
 				# clas.lock.release()
@@ -92,7 +100,9 @@ class Dispatcher:
 		# plt.show()
 		clas.t_v = throttling_value
 		for i in range(n):
-			thread = threading.Thread(target=Dispatcher.threaded_function, args=(job_queue,))
+			result = []
+			clas.results.append(result)
+			thread = threading.Thread(target=Dispatcher.threaded_function, args=[job_queue, result])
 			thread.daemon = True
 			thread.start()
 			clas.threads.append(thread)

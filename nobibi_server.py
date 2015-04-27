@@ -1,5 +1,7 @@
 import os
 import time
+import threading
+import sys
 
 import adaptor
 import networking.mp4networking
@@ -21,9 +23,17 @@ hardware_manager.hardware_info()
 while not network_manager.running:
 	pass
 
-router = router.mp4router.Router(network_manager, dispatcher.Dispatcher, hardware_manager)
+aggregate_flag = threading.Event()
+
+router = router.mp4router.Router(network_manager, dispatcher.Dispatcher, hardware_manager, aggregate_flag = aggregate_flag)
 
 while True:
 	time.sleep(5)
 	if network_manager.recved_jobs.qsize() == 0:
 		print("Completed {0} jobs".format(dispatcher.Dispatcher.done_count))
+	if aggregate_flag.isSet():
+		print("server exiting")
+		network_manager.recved_comm.get()
+		print("Server is safe to exit")
+		exit(0)
+

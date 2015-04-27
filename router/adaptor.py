@@ -44,7 +44,7 @@ def adaptor(remote_info, insNetworking, dispatcher, hardware_info):
 	ret["throttling"] = remote_throttling
 	num_jobs_in = 0
 	if local_info["status"] == "Done" and remote_info["status"] == "Done":
-		ret["type"] = "Done"
+		ret["type"] = "thor"
 	elif local_info["status"] == "Done": 
 		num_jobs_in = remote_info["num"] * local_info["throttling"]/(local_info["throttling"] + remote_info["throttling"])
 	elif remote_info["status"] == "Done": 
