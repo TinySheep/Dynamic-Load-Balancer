@@ -70,18 +70,18 @@ class Dispatcher:
 						else:
 							time.sleep(sleep_time)
 							start_time = time.time()
-					count = 0
-					while count<length:
-						if (time.time() - start_time) < exec_time:
-							for i in range(1000):
-								clas.jobs[count+start_index] = curr_jobs[count]
-							count += 1
-						else:
-							time.sleep(sleep_time)
-							start_time = time.time()
+					# count = 0
+					# while count<length:
+					# 	if (time.time() - start_time) < exec_time:
+					# 		for i in range(1000):
+					# 			clas.jobs[count+start_index] = curr_jobs[count]
+					# 		count += 1
+					# 	else:
+					# 		time.sleep(sleep_time)
+					# 		start_time = time.time()
 					# print (clas.jobs[start_index:start_index+length])
 					with clas.lock:
-						done_count += 1
+						clas.done_count += 1
 				# clas.lock.release()
 
 

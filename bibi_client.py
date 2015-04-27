@@ -54,7 +54,7 @@ state_manager_obj.start_comm()
 
 while True:
 	try:
-		comm = router.thor.get(3)
+		comm = router.thor.get(timeout=3)
 	except:
 		print("timed out getting thor")
 	else:
@@ -65,13 +65,17 @@ while True:
 			num_req = num_jobs / 2
 		while num_req > 0:
 			try:
-				job = network_manager.recved_jobs.get(3)
+				job = network_manager.recved_jobs.get(timeout=3)
 			except:
 				print("timed out getting job")
+				num_req = 0
+				break
 			else:
 				to_send.append(job)
+				num_req -= 1
 		if len(to_send) > 0:
 			network_manager.send_jobs(to_send)
+			print("sent {0} jobs".format(len(to_send)))
 
 	if network_manager.recved_jobs.qsize() == 0:
 		print("Completed {0} jobs".format(dispatcher.Dispatcher.done_count))
