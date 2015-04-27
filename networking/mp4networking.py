@@ -155,6 +155,10 @@ class MP4networking:
 				print("send is 0")
 			size -= sent
 
+	def _batch_send(self, conn, data):
+		for datum in data:
+			self._send(conn, datum)
+
 	def close(self):
 		self._job_chanel.close()
 		self._comm_chanel.close()
@@ -162,6 +166,11 @@ class MP4networking:
 
 	def send_job(self, job):
 		t = threading.Thread(target=self._send, args=[self._job_chanel, job])
+		t.daemon = True
+		t.start()
+
+	def send_jobs(self, jobs):
+		t = threading.Thread(target=self._batch_send, args=[self._job_chanel, jobs])
 		t.daemon = True
 		t.start()
 
