@@ -33,13 +33,14 @@ def hardware_info():
 		res["status"] = "Runnning"
 	
 
-	pid = 2324 #pid will be pulled during runtime 
+	pid = os.getpid()
 	proc = psutil.Process(pid)
 	ret["my_cpu"] = proc.get_cpu_percent(0.1)
 	ret["free_cpu"] = 100 - psutil.cpu_percent(interval=0.1)
 	throttling_val = int(config.read())	
 	ret["num"] = len(jobs)
 	ret["throttling"] = throttling_val
+	ret["type"] = "bibi"
 
 	print(ret)
 	return ret
