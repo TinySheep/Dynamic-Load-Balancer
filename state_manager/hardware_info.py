@@ -10,7 +10,7 @@ class HardwareInfo:
 		self.job_queue_ref = job_queue_ref
 
 
-	def hardware_info():
+	def hardware_info(self):
 		ret = {}
 		#need to compute speed
 		if self.last_time == -1:
@@ -19,18 +19,18 @@ class HardwareInfo:
 			time_elapsed = time.time() - self.last_time
 			self.last_time = time.time()
 			print("time is " + str(time_elapsed))
-
-		ret["time"] = time_elapsed
+			ret["time"] = time_elapsed
+		
 
 		qlen = self.job_queue_ref.qsize()
 		if self.last_num_jobs == -1:
 			self.last_num_jobs = qlen
 		elif qlen == 0:
-			res["status"] = "Done"
+			ret["status"] = "Done"
 		else: 
 			jobs_done = qlen - self.last_num_jobs
 			self.last_num_jobs = qlen
-			res["status"] = "Runnning"
+			ret["status"] = "Runnning"
 		
 		proc = psutil.Process(self.pid)
 		ret["my_cpu"] = proc.get_cpu_percent(0.1)
