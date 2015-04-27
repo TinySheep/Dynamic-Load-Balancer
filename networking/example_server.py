@@ -13,8 +13,7 @@ while not mp4obj.running:
 
 print("server up and running")
 
-mp4obj.send_job(job1)
-mp4obj.send_job(job2)
+mp4obj.send_jobs([job1, job2])
 mp4obj.send_comm(comm1)
 mp4obj.send_comm(comm2)
 
