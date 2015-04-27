@@ -1,60 +1,12 @@
 import os, psutil, time
-
-config = open('throttling.config', 'r')
-
-jobs = []
-
-insMP4Networking # Networking object
-
-last_time =	-1
-last_num_jobs = -1
-
-def hardware_info():
-	global last_time
-	global last_num_jobs
-	ret = {}
-	#need to compute speed
-	if last_time == -1:
-		last_time = time.time()
-	else:
-		time_elapsed = time.time() - last_time
-		last_time = time.time()
-		print("time is " + str(time_elapsed))
-
-	ret["time"] = time_elapsed
-
-	if last_num_jobs == -1:
-		last_num_jobs = len(jobs)
-	elif len(jobs) == 0:
-		res["status"] = "Done"
-	else: 
-		jobs_done = len(jobs) - last_num_jobs
-		last_num_jobs = len(jobs)
-		res["status"] = "Runnning"
-	
-
-	pid = os.getpid()
-	proc = psutil.Process(pid)
-	ret["my_cpu"] = proc.get_cpu_percent(0.1)
-	ret["free_cpu"] = 100 - psutil.cpu_percent(interval=0.1)
-	throttling_val = int(config.read())	
-	ret["num"] = len(jobs)
-	with open('throttling.config', 'r') as config:
-		throttling_val = int(config.read())
-	ret["throttling"] = throttling_val
-	ret["type"] = "bibi"
-
-	print(ret)
-	return ret
-
-
+'''
 hardware_info()
 time.sleep(1)
 test = hardware_info()
 print(test)
-
-def adaptor(remote_info):
-	local_info = hardware_info()
+'''
+def adaptor(remote_info, insNetworking, dispatcher, hardware_info):
+	local_info = hardware_info.hardware_info()
 	new_throttling = local_info["throttling"]
 	remote_throttling = remote_info["throttling"]
 	
@@ -83,8 +35,8 @@ def adaptor(remote_info):
 		elif remote_info["throttling"] < 75: 
 			remote_throttling = remote_info["throttling"] + 20
 
-# Call worker thread function 
-	Dispatcher.setThrottling(new_throttling)
+	# Call worker thread function 
+	dispatcher.setThrottling(new_throttling)
 
 	ret = {}
 	ret["type"] = "thor"
@@ -105,7 +57,7 @@ def adaptor(remote_info):
 	else: 
 		if local_rem - remote_rem > 20: 
 			num_jobs_in = (-1) * (local_rem - remote_rem) * remote_speed / 2 
-		else remote_rem - local_rem > 20: 
+		elif remote_rem - local_rem > 20: 
 			num_jobs_in = (remote_rem - local_rem) * local_speed / 2 
 
 	if num_jobs_in > 0: 
@@ -113,8 +65,6 @@ def adaptor(remote_info):
 	else: 
 		ret["reqJobs"] = 0
 		# Call transfer manager
-		
-	
 
-	insMP4Networking.send(ret)
+	insNetworking.send_comm(ret)
 
