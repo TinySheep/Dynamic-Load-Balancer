@@ -103,6 +103,7 @@ while True:
 			data = job['data']
 			final_result[start_idx:(start_idx + length)] = data
 		prev = final_result[0]
+		print("First value is {0}".format(prev))
 		for val in final_result:
 			if val != prev:
 				print("NOOOOOOOOOOOOOO")
