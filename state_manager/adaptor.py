@@ -1,56 +1,10 @@
 import os, psutil, time
-
-config = open('throttling.config', 'r')
-
-jobs = []
-
-last_time =	-1
-last_num_jobs = -1
-
-def hardware_info():
-	global last_time
-	global last_num_jobs
-	ret = {}
-	#need to compute speed
-	if last_time == -1:
-		last_time = time.time()
-	else:
-		time_elapsed = time.time() - last_time
-		last_time = time.time()
-		print("time is " + str(time_elapsed))
-
-	ret["time"] = time_elapsed
-
-	if last_num_jobs == -1:
-		last_num_jobs = len(jobs)
-	elif len(jobs) == 0:
-		res["status"] = "Done"
-	else: 
-		jobs_done = len(jobs) - last_num_jobs
-		last_num_jobs = len(jobs)
-		res["status"] = "Runnning"
-	
-
-	pid = os.getpid()
-	proc = psutil.Process(pid)
-	ret["my_cpu"] = proc.get_cpu_percent(0.1)
-	ret["free_cpu"] = 100 - psutil.cpu_percent(interval=0.1)
-	throttling_val = int(config.read())	
-	ret["num"] = len(jobs)
-	with open('throttling.config', 'r') as config:
-		throttling_val = int(config.read())
-	ret["throttling"] = throttling_val
-	ret["type"] = "bibi"
-
-	print(ret)
-	return ret
-
-
+'''
 hardware_info()
 time.sleep(1)
 test = hardware_info()
 print(test)
-
+'''
 def adaptor(remote_info, insNetworking, dispatcher):
 	local_info = hardware_info()
 	new_throttling = local_info["throttling"]
@@ -111,8 +65,6 @@ def adaptor(remote_info, insNetworking, dispatcher):
 	else: 
 		ret["reqJobs"] = 0
 		# Call transfer manager
-		
-	
 
 	insNetworking.send(ret)
 
