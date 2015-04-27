@@ -4,12 +4,10 @@ config = open('throttling.config', 'r')
 
 jobs = []
 
-insMP4Networking # Networking object
-
 last_time =	-1
 last_num_jobs = -1
 
-def hardware_info():
+def hardware_info(insNetworking, dispatcher):
 	global last_time
 	global last_num_jobs
 	ret = {}
@@ -84,7 +82,7 @@ def adaptor(remote_info):
 			remote_throttling = remote_info["throttling"] + 20
 
 # Call worker thread function 
-	Dispatcher.setThrottling(new_throttling)
+	dispatcher.setThrottling(new_throttling)
 
 	ret = {}
 	ret["type"] = "thor"
@@ -105,7 +103,7 @@ def adaptor(remote_info):
 	else: 
 		if local_rem - remote_rem > 20: 
 			num_jobs_in = (-1) * (local_rem - remote_rem) * remote_speed / 2 
-		else remote_rem - local_rem > 20: 
+		elif remote_rem - local_rem > 20: 
 			num_jobs_in = (remote_rem - local_rem) * local_speed / 2 
 
 	if num_jobs_in > 0: 
@@ -116,5 +114,5 @@ def adaptor(remote_info):
 		
 	
 
-	insMP4Networking.send(ret)
+	insNetworking.send(ret)
 
