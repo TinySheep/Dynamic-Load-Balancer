@@ -10,6 +10,7 @@ class Dispatcher:
 	thread_event = threading.Event()
 	t_v = 50
 	jobs = [0]*1024*1024*16
+	threads = []
 
 	#pyplot animation code inspired by http://stackoverflow.com/questions/16249466/dynamically-updating-a-bar-plot-in-matplotlib
 	# def setup_backend(backend='TkAgg'):
@@ -83,16 +84,15 @@ class Dispatcher:
 
 	@classmethod
 	def dispatch_task(clas, job_queue, throttling_value, n):
-		threads = []
+		clas.threads = []
 		# Dispatcher.animate()
 		# plt.show()
 		clas.t_v = throttling_value
 		for i in range(n):
 			thread = threading.Thread(target=Dispatcher.threaded_function, args=(job_queue,))
+			thread.daemon = True
 			thread.start()
-			threads.append(thread)
-		for th in threads:
-			th.join()
+			clas.threads.append(thread)
 
 
 
