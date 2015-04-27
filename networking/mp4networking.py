@@ -47,8 +47,8 @@ class MP4networking:
 		self._comm_chanel = s2
 		s1.send("job")
 		s2.send("comm")
-		ack1 = s1.recv(1024)
-		ack2 = s2.recv(1024)
+		ack1 = s1.recv(4)
+		ack2 = s2.recv(4)
 		if ack1 == "cool" and ack2 == "cool":
 			print("Connected to {0}:{1}".format(server_addr, MP4NETWORKING_PORT))
 			self._con_established.set()
