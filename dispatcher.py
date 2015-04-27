@@ -63,8 +63,8 @@ class Dispatcher:
 					count = 0
 					while count<length:
 						if (time.time() - start_time) < exec_time:
-							for i in range(1000):
-								curr_jobs[count] += 1.111111
+							for i in range(10):
+								curr_jobs[count] += 111.1111
 							count += 1
 						else:
 							time.sleep(sleep_time)
