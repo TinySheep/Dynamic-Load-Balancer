@@ -39,6 +39,8 @@ def hardware_info():
 	ret["free_cpu"] = 100 - psutil.cpu_percent(interval=0.1)
 	throttling_val = int(config.read())	
 	ret["num"] = len(jobs)
+	with open('throttling.config', 'r') as config:
+		throttling_val = int(config.read())
 	ret["throttling"] = throttling_val
 	ret["type"] = "bibi"
 
