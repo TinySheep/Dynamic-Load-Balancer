@@ -1,4 +1,5 @@
 import threading
+import adaptor
 import Queue
 
 
@@ -6,11 +7,12 @@ class Router:
 	_network_manager = None
 	_should_shutdown = threading.Event()
 
-	bibi = Queue.Queue()
 	thor = Queue.Queue()
 
-	def __init__(self, network_manager):
+	def __init__(self, network_manager, dispatcher, hardware_info):
 		self._network_manager = network_manager
+		self._dispatcher = dispatcher
+		self._hardware_info = hardware_info
 		t = threading.Thread(target=self._classify)
 		t.daemon = True
 		t.start()
@@ -23,9 +25,11 @@ class Router:
 				print("911")
 			else:
 				if comm["type"] == "bibi":
-					self.bibi.put(comm)
+					adaptor.adaptor(comm, self._network_manager, self._dispatcher, self._hardware_info)
 				elif comm["type"] == "thor":
+					dispatcher.setThrottling(comm["throttling"])
 					self.thor.put(comm)
 				else:
 					print("911911")
+	
 
