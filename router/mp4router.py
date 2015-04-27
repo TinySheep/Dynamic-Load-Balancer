@@ -2,7 +2,6 @@ import threading
 import adaptor
 import Queue
 
-
 class Router:
 	_network_manager = None
 	_should_shutdown = threading.Event()
@@ -27,9 +26,17 @@ class Router:
 				if comm["type"] == "bibi":
 					adaptor.adaptor(comm, self._network_manager, self._dispatcher, self._hardware_info)
 				elif comm["type"] == "thor":
+					if comm["done"] + dispatcher.done_count == 1024: 
+						info = {}
+						info["type"] = "SEND"
+						self._network_manager.send_comm(info)
+						continue
 					self._dispatcher.setThrottling(comm["throttling"])
 					self._hardware_info.throttle = comm["throttling"]
 					self.thor.put(comm)
+				elif comm["type"] == "SEND" :
+# Send me all the jobs!
+
 				else:
 					print("911911")
 	

@@ -97,7 +97,3 @@ class Dispatcher:
 			thread.start()
 			clas.threads.append(thread)
 
-
-
-
-
