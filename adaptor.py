@@ -5,8 +5,8 @@ time.sleep(1)
 test = hardware_info()
 print(test)
 '''
-def adaptor(remote_info, insNetworking, dispatcher):
-	local_info = hardware_info()
+def adaptor(remote_info, insNetworking, dispatcher, hardware_info):
+	local_info = hardware_info.hardware_info()
 	new_throttling = local_info["throttling"]
 	remote_throttling = remote_info["throttling"]
 	
@@ -35,7 +35,7 @@ def adaptor(remote_info, insNetworking, dispatcher):
 		elif remote_info["throttling"] < 75: 
 			remote_throttling = remote_info["throttling"] + 20
 
-# Call worker thread function 
+	# Call worker thread function 
 	dispatcher.setThrottling(new_throttling)
 
 	ret = {}
@@ -66,5 +66,5 @@ def adaptor(remote_info, insNetworking, dispatcher):
 		ret["reqJobs"] = 0
 		# Call transfer manager
 
-	insNetworking.send(ret)
+	insNetworking.send_comm(ret)
 
