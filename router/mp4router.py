@@ -9,11 +9,13 @@ class Router:
 
 	thor = Queue.Queue()
 
-	def __init__(self, network_manager, dispatcher, hardware_info, aggregate_flag = None):
+	def __init__(self, network_manager, dispatcher, hardware_info, aggregate_flag = None, logger = None, gui = None):
 		self._network_manager = network_manager
 		self._dispatcher = dispatcher
 		self._hardware_info = hardware_info
 		self.aggregate_flag = aggregate_flag
+		self._logger = logger
+		self.gui = gui
 		t = threading.Thread(target=self._classify)
 		t.daemon = True
 		t.start()
@@ -26,6 +28,9 @@ class Router:
 				pass
 			else:
 				if comm["type"] == "bibi":
+					if self._logger:
+						self._logger("Received state information from client")
+						self.gui.remote_info = comm
 					adaptor.adaptor(comm, self._network_manager, self._dispatcher, self._hardware_info)
 				elif comm["type"] == "thor":
 					if comm["done"] + self._dispatcher.done_count == 1024: 
@@ -39,6 +44,8 @@ class Router:
 						return
 					self._dispatcher.setThrottling(comm["throttling"])
 					self._hardware_info.throttle = comm["throttling"]
+					if self._logger:
+						self._logger("Setting throttle value to {0}...".format(comm["throttling"]))
 					self.thor.put(comm)
 				elif comm["type"] == "SEND" :
 					print("remote received aggregation")

@@ -77,6 +77,10 @@ def adaptor(remote_info, insNetworking, dispatcher, hardware_info):
 		if len(to_send) > 0:
 			insNetworking.send_jobs(to_send)
 			print("sent {0} jobs".format(len(to_send)))		# Call transfer manager
+	ret["my_cpu"] = local_info["my_cpu"]
+	ret["free_cpu"] = local_info["free_cpu"]
+	ret["my_throttle"] = local_info["throttling"]
+	ret["qed"] = local_info["num"]
 	ret["done"] = dispatcher.done_count
 
 	insNetworking.send_comm(ret)

@@ -7,7 +7,7 @@ import zlib
 import Queue
 
 # The port to use, should be the same on both ends
-MP4NETWORKING_PORT = 24643
+MP4NETWORKING_PORT = 24642
 # Length of string returned by calling struct.pack() on an int
 INT_SIZE = 4
 

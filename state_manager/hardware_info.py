@@ -40,10 +40,11 @@ class HardwareInfo:
 			t_v = config.read()
 			if t_v:
 				self.throttle = int(t_v)
+				if self.logger:
+					self.logger("Read throttle value from user {0} and setting...".format(int(t_v)))
 				config.truncate(0)
 
 		ret["throttling"] = self.throttle
 		ret["type"] = "bibi"
-
-		print(ret)
+		
 		return ret
